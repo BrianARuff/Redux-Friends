@@ -5,6 +5,8 @@ import {fetchFriends} from './actions';
 import {connect} from 'react-redux';
 import Friend from './components/Friend';
 import FriendForm from './components/FriendForm';
+import {Route, Link} from 'react-router-dom';
+
 
 class App extends Component {
 
@@ -18,7 +20,8 @@ class App extends Component {
         {this.props.fetching ? <img src={logo} alt="Logo"/> 
         : this.props.friends ?
           <div>
-            <FriendForm />
+          <Route path="/newFriend" render={(props) => <FriendForm {...props} />} />
+          <Link to="/newFriend">Add New Friend!!</Link>
             {this.props.friends.map(friend => {
               return (
                 <Friend key={friend.id} friend={friend} />
