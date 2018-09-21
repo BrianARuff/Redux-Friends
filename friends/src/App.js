@@ -3,15 +3,20 @@ import logo from './logo.svg';
 import './App.css';
 import {fetchFriends} from './actions';
 import {connect} from 'react-redux';
-import Friend from './components/Friend';
 import FriendForm from './components/FriendForm';
-import {Route, Link} from 'react-router-dom';
+import {Route, Link, withRouter} from 'react-router-dom';
+import FriendsList from './components/FriendsList';
 
 
 class App extends Component {
 
+  state = {
+    reload: false,
+  }
+
   componentDidMount = () => {
     this.props.fetchFriends();
+    this.setState({reload: !this.state.reload})
   }
 
   render() {
@@ -20,13 +25,9 @@ class App extends Component {
         {this.props.fetching ? <img src={logo} alt="Logo"/> 
         : this.props.friends ?
           <div>
-          <Route path="/newFriend" render={(props) => <FriendForm {...props} />} />
+          <Route exact path="/newFriend" component={FriendForm} />
           <Link to="/newFriend">Add New Friend!!</Link>
-            {this.props.friends.map(friend => {
-              return (
-                <Friend key={friend.id} friend={friend} />
-              )
-            })}
+          <Route exact path="/" render={() => <FriendsList friends={this.props.friends} />} />
           </div>    
         : <h1>Error</h1> }
       </div>
@@ -43,4 +44,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, {fetchFriends})(App);
+export default withRouter(connect(mapStateToProps, {fetchFriends})(App));
